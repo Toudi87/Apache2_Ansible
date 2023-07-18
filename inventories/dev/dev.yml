@@ -1,0 +1,35 @@
+dev:
+  #vars:
+  #  ansible_user: vagrant
+  
+  children:
+    webservers:
+      #vars: 
+        #ansible_user: vagrant
+      hosts:
+        webserver-1: #agent2
+          ansible_host: 192.168.10.101
+          #ansible_port: 22
+          #ansible_user: vagrant
+        webserver-2: #agent3
+          ansible_host: 192.168.10.102
+          #ansible_port: 22
+          #ansible_user: vagrant
+    
+    loadbalancers:
+      #vars: 
+        #ansible_user: vagrant
+      hosts:
+        lb: #agent1
+          ansible_host: 192.168.10.100
+          ansible_port: 22
+          ansible_user: vagrant
+
+local:
+  children:
+    my_pc:
+      hosts:
+        ansible_master: 
+          ansible_host: localhost
+          ansible_connection: local
+
