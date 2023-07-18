@@ -1,0 +1,28 @@
+--- # setup-app.yml
+
+- name: Wgranie pliku index.php na webservers
+  hosts: webservers
+  become: true
+  tasks:
+  - name: Kopiowanie pliku index.php
+    ansible.builtin.copy:
+      src: ../index.php
+      dest: /var/www/html/
+      mode: '0755'
+
+  - name: Ustawienie zmiennej HOST w pliku index.php
+    ansible.builtin.replace:
+      path: /var/www/html/index.php
+      regexp: 'HOST'
+      replace: " {{ inventory_hostname }} "
+  
+  - name: Konfiguracja pliku php.ini
+    ansible.builtin.lineinfile:
+      path: /etc/php/7.4/cli/php.ini
+      regexp: '^short_open_tag'
+      line: "short_open_tag = Off"
+  
+  - name: Restart Apache
+    ansible.builtin.service:
+      name: apache2
+      state: restarted

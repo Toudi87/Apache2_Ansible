@@ -1,0 +1,47 @@
+--- # setup-app.yml
+
+- name: Ustawianie aplikacji
+  hosts: webservers
+  become: true
+
+  vars: 
+    path_to_app: "/var/www/html/"
+    
+  tasks:
+  - name: Kopiowanie index.php
+    ansible.builtin.copy:
+      src: ../index.php
+      dest: "{{ path_to_app }}"
+      mode: '0755'
+
+  - name: Ustawienie zmiennej HOST w pliku index.php
+    ansible.builtin.replace:
+      path: "{{ path_to_app }}index.php"
+      regexp: 'HOST'
+      replace: " {{ inventory_hostname }} "
+
+  - name: Stworzenie prostej storny informacyjnej
+    ansible.builtin.copy:
+      dest: "{{ path_to_app }}info.php"
+      content: "<h1> Info o hoscie: {{ ansible_hostname }} </h1>"
+
+  - name: Pokaż zawartość folderu /var/www/html/
+    ansible.builtin.command: "ls -la {{ path_to_app }}"
+    register: dir_contents
+
+  - name: Debug
+    ansible.builtin.debug:
+      msg: "{{ dir_contents }}"
+  
+  - name: Konfiguracja pliku php.ini
+    ansible.builtin.lineinfile:
+      path: /etc/php/7.4/cli/php.ini
+      regexp: '^short_open_tag'
+      line: "short_open_tag = Off"
+    notify: Restart Apache
+  
+  handlers:
+  - name: Restart Apache
+    ansible.builtin.service:
+      name: apache2
+      state: restarted

@@ -1,0 +1,7 @@
+--- # all-playbooks.yml
+
+- ansible.builtin.import_playbook: apt-update.yml
+- ansible.builtin.import_playbook: install-services.yml
+- ansible.builtin.import_playbook: setup-appv2.yml
+- ansible.builtin.import_playbook: setup-lb.yml
+- ansible.builtin.import_playbook: check-status.yml

@@ -1,0 +1,7 @@
+--- # check-status.yml
+- hosts: webservers:loadbalancers
+  become: true
+  tasks:
+  - name: sprawdzenie statusu
+    ansible.builtin.shell: 
+      service apache2 status

@@ -1,0 +1,30 @@
+--- # install-services.yml
+
+- name: Instalacja Apache na webservers i lb
+  hosts: webservers:loadbalancers
+  become: true
+
+  tasks:
+  - name: Instalacja Apache na wszystkich hostach
+    ansible.builtin.apt:
+      name: apache2
+      state: latest
+
+- name: Instalacja php na webservers
+  hosts: webservers
+  become: true
+  tasks:
+  - name: Instalacja php
+    ansible.builtin.apt:
+      name: php
+      state: latest
+
+- name: Start/Restart Apache na wszystkich hostach
+  hosts: webservers:loadbalancers
+  become: true
+  tasks:
+  - name: Uruchomienie Apache
+    ansible.builtin.service:
+      name: apache2
+      state: restarted
+      enabled: true

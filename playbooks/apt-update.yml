@@ -1,0 +1,15 @@
+--- # apt-update.yml
+
+- name: Update servers
+  hosts: webservers:loadbalancers
+  become: true
+
+  tasks:
+  - name: sudo apt update
+    ansible.builtin.apt:
+      update_cache: true
+
+  - name: sudo apt upgrade -y
+    ansible.builtin.apt:
+      name: '*'
+      state: latest

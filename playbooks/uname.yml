@@ -1,0 +1,8 @@
+--- 
+- name: nazwa systemu
+  hosts: all
+  tasks:
+  - name: uname
+    ansible.builtin.shell:
+      uname
+      
